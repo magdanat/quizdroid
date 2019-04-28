@@ -7,6 +7,6 @@ class QuestionActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.question_activity)
+        setContentView(R.layout.fragment_question)
     }
 }
