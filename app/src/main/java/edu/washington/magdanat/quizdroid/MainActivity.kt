@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
 
         val tabHost = findViewById<TabHost>(android.R.id.tabhost)
         val tabSpec = tabHost.newTabSpec("tab1")
-        tabSpec.setIndicator(R.layout.acti)
+        tabSpec.setIndicator(R.layout.overview_activity)
         val intent = Intent(this, )
     }
 }
