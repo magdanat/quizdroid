@@ -17,5 +17,7 @@
         <action android:id="@+id/action_questionFragment_to_summaryFragment" app:destination="@id/summaryFragment"/>
     </fragment>
     <fragment android:id="@+id/summaryFragment" android:name="edu.washington.magdanat.quizdroid.summaryFragment"
-              android:label="fragment_summary" tools:layout="@layout/fragment_summary"/>
+              android:label="fragment_summary" tools:layout="@layout/fragment_summary">
+        <action android:id="@+id/action_summaryFragment_to_questionFragment" app:destination="@id/questionFragment"/>
+    </fragment>
 </navigation>
