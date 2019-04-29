@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="match_parent">
-
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <TextView
+            android:text="Topic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" tools:layout_editor_absoluteY="126dp"
+            tools:layout_editor_absoluteX="176dp" android:id="@+id/textView2"/>
+    <TextView
+            android:text="Description"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp" tools:layout_editor_absoluteY="231dp"
+            tools:layout_editor_absoluteX="165dp" android:id="@+id/textView3"/>
+    <TextView
+            android:text="TotalQuestions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" tools:layout_editor_absoluteY="292dp"
+            tools:layout_editor_absoluteX="165dp" android:id="@+id/textView4"/>
+    <Button
+            android:text="Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" tools:layout_editor_absoluteY="450dp"
+            tools:layout_editor_absoluteX="165dp" android:id="@+id/button"/>
 </android.support.constraint.ConstraintLayout>
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+    >
+</LinearLayout>
