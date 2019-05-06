@@ -7,11 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import kotlinx.android.synthetic.main.item.view.*
+
 
 
 class DetailFragment : Fragment() {
@@ -33,7 +32,9 @@ class DetailFragment : Fragment() {
         ),
         "correct" to 0,
         "answered" to 0,
-        "current" to 1
+        "current" to 1,
+        "given" to "",
+        "correctAnswer" to ""
     )
 
     private val questionsPhysics = bundleOf(
@@ -55,7 +56,9 @@ class DetailFragment : Fragment() {
         ),
         "correct" to 0,
         "answered" to 0,
-        "current" to 1
+        "current" to 1,
+        "given" to "",
+        "correctAnswer" to ""
     )
 
     private val questionsMCU = bundleOf(
@@ -93,7 +96,9 @@ class DetailFragment : Fragment() {
         ),
         "correct" to 0,
         "answered" to 0,
-        "current" to 1
+        "current" to 1,
+        "given" to "",
+        "correctAnswer" to ""
     )
 
     private lateinit var questionsToUse : Bundle
@@ -108,15 +113,6 @@ class DetailFragment : Fragment() {
             topic.equals("Physics") -> questionsToUse = questionsPhysics
             topic.equals("Marvel Super Heroes") -> questionsToUse = questionsMCU
         }
-
-        // Need to inflate
-
-        // Views
-
-        // Change Text
-
-
-        // For moving to next fragment
 
         // Need to inflate
         val view = inflater.inflate(R.layout.fragment_detail, container, false)

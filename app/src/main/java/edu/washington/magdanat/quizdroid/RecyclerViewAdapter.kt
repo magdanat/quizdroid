@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.item.view.*
      private val variableMCU = bundleOf(
          "Topic" to "Marvel Super Heroes",
          "Description" to "This quiz will be a series of questions about the Marvel Cinematic Universe",
-         "Questions" to 3
+         "Questions" to 4
      )
 
      override fun onCreateViewHolder(parent: ViewGroup, viewHolderType: Int): ViewHolder {
@@ -57,7 +57,6 @@ import kotlinx.android.synthetic.main.item.view.*
                 } else {
                     it.findNavController().navigate(R.id.action_listFragment_to_detailFragment, variableMCU)
                 }
-//                it.findNavController().navigate(R.id.action_listFragment_to_detailFragment, )
             }
         }
 
