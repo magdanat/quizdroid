@@ -49,7 +49,6 @@ import kotlinx.android.synthetic.main.item.view.*
             itemView.content.text = listItem
 
             itemView.setOnClickListener {
-                Toast.makeText(itemView.context,  itemView.content.text.toString() + "clicked!", Toast.LENGTH_SHORT).show()
                 if (itemView.content.text.toString().equals("Math")) {
                     it.findNavController().navigate(R.id.action_listFragment_to_detailFragment, variableMath)
                 } else if (itemView.content.text.toString().equals("Physics")) {

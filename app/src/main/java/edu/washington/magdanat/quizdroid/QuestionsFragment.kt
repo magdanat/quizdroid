@@ -55,8 +55,7 @@ class QuestionsFragment : Fragment() {
                 // Update amount of correct questions
                 arguments?.putInt("correct", (arguments?.getInt("correct")!!.plus(1)))
             }
-            Log.i("test","setOnClickListener found!")
-            Log.i("test","We in this view setOnClickListener")
+
 
             // Update current question
             arguments?.putInt("current", (arguments?.getInt("current")!!.plus(1)))
