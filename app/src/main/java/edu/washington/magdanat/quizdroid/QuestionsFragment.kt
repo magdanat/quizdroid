@@ -1,6 +1,8 @@
 package edu.washington.magdanat.quizdroid
 
+import android.content.Context
 import android.os.Bundle
+import android.provider.Settings.Global.putInt
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,20 +10,19 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import kotlinx.android.synthetic.main.fragment_question.*
-import kotlinx.android.synthetic.main.item.view.*
 
 
 class QuestionsFragment : Fragment() {
-
-    private var correct: Int = 0 // Amount of questions correct
-    private var current: Int = 1 // Current question
-    private var answered: Int = 0 // Amount of questions answered
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+//         var correct  = arguments?.getInt("correct") // Amount of questions correct
+         var current = arguments?.getInt("current") // Current question
+//         var answered = arguments?.getInt("answered") // Amount of questions answered
+
         // Need to inflate
         val view = inflater.inflate(R.layout.fragment_question, container, false)
-        val questionSet = arguments!!.getCharSequenceArray(current.toString())
+//        val questionSet = arguments?.getCharSequenceArray(current.toString())
+        val questionSet  = arguments!!.getStringArray(current.toString())
 
         val questionView : TextView = view.findViewById(R.id.questionQuiz)
         val answerOneView : RadioButton = view.findViewById(R.id.answer1)
@@ -37,40 +38,30 @@ class QuestionsFragment : Fragment() {
         answerThreeView.text = questionSet[3]
         answerFourView.text = questionSet[4]
 
-//        group?.setOnCheckedChangeListener { group, checkedId ->  }
-//            override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
-//                // Only show the submit button if one of the options is selected.
-////                Log.i("Change detected","Change Detected!")
-//                Toast.makeText(context,"clicked!", Toast.LENGTH_SHORT).show()
-//                submit.visibility = View.VISIBLE
-//            }
-//        })
 
-//        rGroup.setOnCheckedChangeListener(object: RadioGroup.OnCheckedChangeListener {
-//            fun onCheckedChange(group: RadioGroup?, checkedId: Int) {
-//                val checkedRadioButton : RadioButton = group!!.findViewById(checkedId)
-//                val isChecked = checkedRadioButton.isChecked
-//                if (isChecked) {
-//                    submit.visibility = View.VISIBLE
-//                }
-//            }
-//        })
+        rGroup.setOnCheckedChangeListener { group, checkedId ->
+            // Only show the submit button if one of the options is selected.
+            submit.visibility = View.VISIBLE
+        }
 
-//        submit.setOnClickListener {
-//            val selected = view.findViewById<RadioButton>(group.checkedRadioButtonId)
-//            val correctAnswer = questionSet[5]
-//            if (correctAnswer.equals(selected.text.toString())) {
-//                correct += 1
-//            }
-//
-//            it.findNavController().navigate(R.id.action_questionFragment_to_summaryFragment)
-//        }
+        submit.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                val selectedOption = view.findViewById<RadioButton>(rGroup.checkedRadioButtonId)
+                val isCorrect = selectedOption.text.toString().equals(questionSet?.get(5))
 
+                arguments?.putInt("answered", (arguments?.getInt("answered")!!.plus(1)))
+                if (isCorrect) {
+                    arguments?.putInt("correct", (arguments?.getInt("correct")!!.plus(1)))
+                }
+                Log.i("","setOnClickListener found!")
 
-        // For moving to next fragment
-//        view.findViewById<Button>(R.id.button).setOnClickListener {
-//            it.findNavController().navigate(R.id.action_detailFragment_to_question, questionsToUse)
-//        }
+                view.findViewById<Button>(R.id.button)?.setOnClickListener {
+                    Log.i("","We in this view setOnClickListener")
+                    it.findNavController().navigate(R.id.action_questionFragment_to_summaryFragment, arguments)
+                }
+
+            }
+        })
 
         return view
     }

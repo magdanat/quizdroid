@@ -30,7 +30,10 @@ class DetailFragment : Fragment() {
         ),
         "5" to arrayOf(
             "29 % 10 = ?", "9", "2.9", "1", "0", "9"
-        )
+        ),
+        "correct" to 0,
+        "answered" to 0,
+        "current" to 1
     )
 
     private val questionsPhysics = bundleOf(
@@ -48,8 +51,11 @@ class DetailFragment : Fragment() {
             "10 mph",
             "10 m/s",
             "9.81 m/s/s",
-            "9.81 m/s/s/"
-        )
+            "9.81 m/s/s"
+        ),
+        "correct" to 0,
+        "answered" to 0,
+        "current" to 1
     )
 
     private val questionsMCU = bundleOf(
@@ -84,7 +90,10 @@ class DetailFragment : Fragment() {
             "World",
             "Galaxy",
             "Galaxy"
-        )
+        ),
+        "correct" to 0,
+        "answered" to 0,
+        "current" to 1
     )
 
     private lateinit var questionsToUse : Bundle
@@ -94,13 +103,20 @@ class DetailFragment : Fragment() {
         val topic = arguments?.getString("Topic")
         val description = arguments?.getString("Description")
         val questions  = arguments?.getInt("Questions")
-        if (topic.equals("Math")) {
-            questionsToUse = questionsMath
-        } else if (topic.equals("Physics")) {
-            questionsToUse = questionsPhysics
-        } else if (topic.equals("Marvel Super Heroes")) {
-            questionsToUse = questionsMCU
+        when {
+            topic.equals("Math") -> questionsToUse = questionsMath
+            topic.equals("Physics") -> questionsToUse = questionsPhysics
+            topic.equals("Marvel Super Heroes") -> questionsToUse = questionsMCU
         }
+
+        // Need to inflate
+
+        // Views
+
+        // Change Text
+
+
+        // For moving to next fragment
 
         // Need to inflate
         val view = inflater.inflate(R.layout.fragment_detail, container, false)
