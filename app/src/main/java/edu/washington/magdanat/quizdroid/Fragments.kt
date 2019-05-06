@@ -80,7 +80,6 @@ class RecyclerViewAdapter(var list: List<String>): RecyclerView.Adapter<Recycler
             itemView.content.text = listItem
 
             itemView.setOnClickListener {
-                Toast.makeText(itemView.context,  itemView.content.text.toString() + "clicked!", Toast.LENGTH_SHORT).show()
                 if (itemView.content.text.toString().equals("Math")) {
                     it.findNavController().navigate(R.id.action_listFragment_to_detailFragment, variableMath)
                 } else if (itemView.content.text.toString().equals("Physics")) {
@@ -261,12 +260,9 @@ class QuestionsFragment : Fragment() {
             // Sets given to the answer selected by user
             arguments?.putString("given", selectedOption.text.toString())
             if (isCorrect) {
-                Log.i("test","Correct answer!")
                 // Update amount of correct questions
                 arguments?.putInt("correct", (arguments?.getInt("correct")!!.plus(1)))
             }
-            Log.i("test","setOnClickListener found!")
-            Log.i("test","We in this view setOnClickListener")
 
             // Update current question
             arguments?.putInt("current", (arguments?.getInt("current")!!.plus(1)))
