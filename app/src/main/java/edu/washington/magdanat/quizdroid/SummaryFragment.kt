@@ -23,7 +23,7 @@ class SummaryFragment : Fragment () {
 
         answerIGave.text = "Your Answer: " + this.arguments?.getString("given")
         correctAnswer.text = "Correct Answer: " + this.arguments?.getString("correctAnswer")
-        correctSoFar.text = arguments?.getInt("correct").toString() + " / " + (arguments?.size()?.minus(5)) + " answers are correct."
+        correctSoFar.text = "You have " + arguments?.getInt("correct").toString() + " out of " + (arguments?.size()?.minus(5)) + " correct"
 
         if (arguments?.getInt("answered")!!.equals(arguments?.size()?.minus(5))) {
             button.text = "Finish"
