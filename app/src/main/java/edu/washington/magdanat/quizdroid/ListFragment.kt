@@ -15,8 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ListFragment : Fragment() {
 
-    private var columnCount = 1
-
     private lateinit var recycler : RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
