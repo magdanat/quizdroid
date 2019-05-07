@@ -245,7 +245,6 @@ class QuestionsFragment : Fragment() {
         answerFourView.text = questionSet[4]
 
         rGroup.setOnCheckedChangeListener { group, checkedId ->
-            // Only show the submit button if one of the options is selected.
             submit.visibility = View.VISIBLE
         }
 
