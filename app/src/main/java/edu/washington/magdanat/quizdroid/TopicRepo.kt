@@ -1,17 +1,22 @@
 package edu.washington.magdanat.quizdroid
 
 import android.os.Bundle
+import androidx.core.os.bundleOf
 
 interface TopicRepositoryInterface {
     fun startRepo()
     fun listOfTopics() : Array<String>
-    fun makeBundle() : Bundle
+    fun getTopic(name: String): Topic?
+    fun makeBundle(topic: Topic): Bundle
+    fun getQuestions(topic: Topic): Array<QuizQuestion>
 }
 
 class TopicRepo : TopicRepositoryInterface {
+
     private var topicQuiz = arrayListOf<Topic>()
-    private lateinit var list : Array<String>
-    private lateinit var bundleTopics : Bundle
+    private lateinit var list : ArrayList<String>
+    private var test : Topic? = null
+    private var newBundle : Bundle? = null
 
     override fun startRepo() {
         // Questions for math Topic
@@ -39,26 +44,47 @@ class TopicRepo : TopicRepositoryInterface {
 
         topicQuiz.add(Topic("Math", "Math quiz", "This quiz will be a series of math questions", arrayOf(mathQOne, mathQTwo, mathQThree, mathQFour)))
         topicQuiz.add(Topic("Physics", "Physics quiz", "This quiz will be a series of physics questions", arrayOf(physicsQOne, physicsQTwo)))
-        topicQuiz.add(Topic("Marvel Cinematic Universe", "MCU Quiz", "This quiz be a series of questions about the Marvel" +
+        topicQuiz.add(Topic("Marvel Cinematic Universe!", "MCU Quiz", "This quiz be a series of questions about the Marvel" +
                 "Cinematic Universe", arrayOf(marvelQOne, marvelQTwo, marvelQThree)))
     }
 
     override fun listOfTopics(): Array<String> {
-        for (x in 0 until topicQuiz.size - 1) {
-            val topicName = topicQuiz[x].name
-            list[x] = topicName
+        list = ArrayList()
+        for (obj in topicQuiz) {
+            list.add(obj.name)
         }
-        return list
+        return list.toTypedArray()
     }
 
-//    override fun makeBundle(): Bundle {
-//        for (obj in topicQuiz) {
-//            bundleTopics.
-//        }
-//        return bundleTopics
-//    }
-//}
+    override fun getTopic(name: String): Topic? {
+        for (obj in topicQuiz) {
+            if (obj.name.equals(name)) {
+                test = obj
+            }
+        }
+        return test
+    }
+
+    // Turns topic into a bundle to pass as an argument
+    override fun makeBundle(topic: Topic): Bundle {
+        newBundle = bundleOf("Topic" to topic.name,
+            "dOne" to topic.descriptionOne,
+            "dTwo" to topic.descriptionTwo,
+            "questionSize" to topic.questions.size,
+            // Current Question of array
+            "current" to 0,
+            // Answer Given
+            "given" to "",
+            // Correct answers so far
+            "correct" to 0
+        )
+        return newBundle as Bundle
+    }
+
+    override fun getQuestions(topic: Topic): Array<QuizQuestion> {
+        return topic.questions
+    }
+}
 
 data class QuizQuestion(val question: String, val quizQuestions: Array<String>, val correct: Int)
 data class Topic(val name: String, val descriptionOne: String, val descriptionTwo: String, val questions: Array<QuizQuestion>)
-    }
