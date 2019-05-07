@@ -8,11 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import kotlinx.android.synthetic.main.item.view.*
-import android.util.Log
 import android.widget.*
 import android.widget.Button
 import android.widget.TextView
@@ -24,14 +21,13 @@ class ListFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_list, container, false)
-        val list = listOf("Math","Physics","Marvel Super Heroes")
+        val list = QuizApp.repo.listOfTopics()
 
         val adapter = RecyclerViewAdapter(list)
         recycler = view.findViewById(R.id.myRecyclerView)
         recycler.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         recycler.adapter = adapter
         recycler.setHasFixedSize(true)
-
 
         return view
     }
@@ -40,25 +36,9 @@ class ListFragment : Fragment() {
 
 }
 
-class RecyclerViewAdapter(var list: List<String>): RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+class RecyclerViewAdapter(var list: List<TopicRepo.Topic>): RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
-    private val variableMath = bundleOf(
-        "Topic" to "Math",
-        "Description" to "This quiz will be a series of math questions",
-        "Questions" to 5
-    )
-
-    private val variablePhysics = bundleOf(
-        "Topic" to "Physics",
-        "Description" to "This quiz will be a series of physics questions",
-        "Questions" to 2
-    )
-
-    private val variableMCU = bundleOf(
-        "Topic" to "Marvel Super Heroes",
-        "Description" to "This quiz will be a series of questions about the Marvel Cinematic Universe",
-        "Questions" to 4
-    )
+    var onTopicClickedListener: ((topic: TopicRepo.Topic) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewHolderType: Int): ViewHolder {
         // Creates ViewHolder to hold reference of the views
@@ -71,129 +51,124 @@ class RecyclerViewAdapter(var list: List<String>): RecyclerView.Adapter<Recycler
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.bindView(list[position], position)
+        viewHolder.bindView(list[position])
     }
 
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bindView(listItem: String, position: Int) {
-            itemView.content.text = listItem
+        fun bindView(topic: TopicRepo.Topic) {
+            itemView.content.text = topic.name
 
             itemView.setOnClickListener {
-                if (itemView.content.text.toString().equals("Math")) {
-                    it.findNavController().navigate(R.id.action_listFragment_to_detailFragment, variableMath)
-                } else if (itemView.content.text.toString().equals("Physics")) {
-                    it.findNavController().navigate(R.id.action_listFragment_to_detailFragment, variablePhysics)
-                } else {
-                    it.findNavController().navigate(R.id.action_listFragment_to_detailFragment, variableMCU)
-                }
+                onTopicClickedListener?.invoke(topic)
             }
         }
-
-
     }
+
 }
 
+
+
 class DetailFragment : Fragment() {
-    private val questionsMath = bundleOf(
-        "1" to arrayOf(
-            "1 + 1 = ?", "2", "-2", "0", "1", "2"
-        ),
-        "2" to arrayOf(
-            "5 * 8 = ?", "32", "48", "-40", "40", "40"
-        ),
-        "3" to arrayOf(
-            "10 / 5 = ?", "2.5", "2", "10", "5", "2"
-        ),
-        "4" to arrayOf(
-            "100 - 20 = ?", "79", "30", "80", "90", "80"
-        ),
-        "5" to arrayOf(
-            "29 % 10 = ?", "9", "2.9", "1", "0", "9"
-        ),
-        "correct" to 0,
-        "answered" to 0,
-        "current" to 1,
-        "given" to "",
-        "correctAnswer" to ""
-    )
+//    private val questionsMath = bundleOf(
+//        "1" to arrayOf(
+//            "1 + 1 = ?", "2", "-2", "0", "1", "2"
+//        ),
+//        "2" to arrayOf(
+//            "5 * 8 = ?", "32", "48", "-40", "40", "40"
+//        ),
+//        "3" to arrayOf(
+//            "10 / 5 = ?", "2.5", "2", "10", "5", "2"
+//        ),
+//        "4" to arrayOf(
+//            "100 - 20 = ?", "79", "30", "80", "90", "80"
+//        ),
+//        "5" to arrayOf(
+//            "29 % 10 = ?", "9", "2.9", "1", "0", "9"
+//        ),
+//        "correct" to 0,
+//        "answered" to 0,
+//        "current" to 1,
+//        "given" to "",
+//        "correctAnswer" to ""
+//    )
 
-    private val questionsPhysics = bundleOf(
-        "1" to arrayOf(
-            "What is the first law of physics?",
-            "An object will remain at rest or in uniform motion unless acted upon by an external force",
-            "There is no first law",
-            "E = mc^2",
-            "None of the Above",
-            "An object will remain at rest or in uniform motion unless acted upon by an external force"
-        ),
-        "2" to arrayOf(
-            "What is the acceleration of gravity?",
-            "9.81 m/s",
-            "10 mph",
-            "10 m/s",
-            "9.81 m/s/s",
-            "9.81 m/s/s"
-        ),
-        "correct" to 0,
-        "answered" to 0,
-        "current" to 1,
-        "given" to "",
-        "correctAnswer" to ""
-    )
+//    private val questionsPhysics = bundleOf(
+//        "1" to arrayOf(
+//            "What is the first law of physics?",
+//            "An object will remain at rest or in uniform motion unless acted upon by an external force",
+//            "There is no first law",
+//            "E = mc^2",
+//            "None of the Above",
+//            "An object will remain at rest or in uniform motion unless acted upon by an external force"
+//        ),
+//        "2" to arrayOf(
+//            "What is the acceleration of gravity?",
+//            "9.81 m/s",
+//            "10 mph",
+//            "10 m/s",
+//            "9.81 m/s/s",
+//            "9.81 m/s/s"
+//        ),
+//        "correct" to 0,
+//        "answered" to 0,
+//        "current" to 1,
+//        "given" to "",
+//        "correctAnswer" to ""
+//    )
 
-    private val questionsMCU = bundleOf(
-        "1" to arrayOf(
-            "What is the first Marvel film of the MCU?",
-            "Iron Man",
-            "Iron Man 2",
-            "The Incredible Hulk",
-            "Batman vs. Superman",
-            "Iron Man"
-        ),
-        "2" to arrayOf(
-            "What color is Iron Man primarily?",
-            "Red",
-            "Blue",
-            "Green",
-            "Purple",
-            "Red"
-        ),
-        "3" to arrayOf(
-            "What is the real name of Captain America?",
-            "Bucky Barnes",
-            "Barnes Nobles",
-            "Steve Dodgers",
-            "Steve Rogers",
-            "Steve Rogers"
-        ),
-        "4" to arrayOf(
-            "Fill in the blank: Guardians of the [Blanks]",
-            "Planet",
-            "Universe",
-            "World",
-            "Galaxy",
-            "Galaxy"
-        ),
-        "correct" to 0,
-        "answered" to 0,
-        "current" to 1,
-        "given" to "",
-        "correctAnswer" to ""
-    )
+//    private val questionsMCU = bundleOf(
+//        "1" to arrayOf(
+//            "What is the first Marvel film of the MCU?",
+//            "Iron Man",
+//            "Iron Man 2",
+//            "The Incredible Hulk",
+//            "Batman vs. Superman",
+//            "Iron Man"
+//        ),
+//        "2" to arrayOf(
+//            "What color is Iron Man primarily?",
+//            "Red",
+//            "Blue",
+//            "Green",
+//            "Purple",
+//            "Red"
+//        ),
+//        "3" to arrayOf(
+//            "What is the real name of Captain America?",
+//            "Bucky Barnes",
+//            "Barnes Nobles",
+//            "Steve Dodgers",
+//            "Steve Rogers",
+//            "Steve Rogers"
+//        ),
+//        "4" to arrayOf(
+//            "Fill in the blank: Guardians of the [Blanks]",
+//            "Planet",
+//            "Universe",
+//            "World",
+//            "Galaxy",
+//            "Galaxy"
+//        ),
+//        "correct" to 0,
+//        "answered" to 0,
+//        "current" to 1,
+//        "given" to "",
+//        "correctAnswer" to ""
+//    )
 
     private lateinit var questionsToUse : Bundle
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val topic = arguments?.getString("Topic")
-        val description = arguments?.getString("Description")
-        val questions  = arguments?.getInt("Questions")
-        when {
-            topic.equals("Math") -> questionsToUse = questionsMath
-            topic.equals("Physics") -> questionsToUse = questionsPhysics
-            topic.equals("Marvel Super Heroes") -> questionsToUse = questionsMCU
-        }
+//        val topic = arguments?.getString("Topic")
+//        val description = arguments?.getString("Description")
+//        val questions  = arguments?.getInt("Questions")
+//        when {
+//            topic.equals("Math") -> questionsToUse = questionsMath
+//            topic.equals("Physics") -> questionsToUse = questionsPhysics
+//            topic.equals("Marvel Super Heroes") -> questionsToUse = questionsMCU
+//        }
 
         // Need to inflate
         val view = inflater.inflate(R.layout.fragment_detail, container, false)
@@ -204,15 +179,16 @@ class DetailFragment : Fragment() {
         val cQuestions : TextView = view.findViewById(R.id.questions)
 
         // Change Text
-        cTopic.text = topic
-        cDescription.text = description
-        cQuestions.text = questions.toString()
+//        cTopic.text = topic
+//        cDescription.text = description
+//        cQuestions.text = questions.toString()
+//        cTopic.text =
 
 
         // For moving to next fragment
-        view.findViewById<Button>(R.id.button).setOnClickListener {
-            it.findNavController().navigate(R.id.action_detailFragment_to_question, questionsToUse)
-        }
+//        view.findViewById<Button>(R.id.button).setOnClickListener {
+//            it.findNavController().navigate(R.id.action_detailFragment_to_question, questionsToUse)
+//        }
 
         return view
     }
