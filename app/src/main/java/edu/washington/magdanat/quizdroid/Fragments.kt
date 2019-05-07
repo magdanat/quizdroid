@@ -63,10 +63,6 @@ class RecyclerViewAdapter(var list: List<String>): RecyclerView.Adapter<Recycler
         fun bindView(listItem: String, position: Int) {
             itemView.content.text = listItem
 
-            val args = Bundle()
-//            args.put
-
-
             itemView.setOnClickListener {
                 // Needs to send topic as a bundle
                 val test = itemView.content.text.toString()
@@ -77,8 +73,6 @@ class RecyclerViewAdapter(var list: List<String>): RecyclerView.Adapter<Recycler
                 it.findNavController().navigate(R.id.action_listFragment_to_detailFragment, args)
             }
         }
-
-
     }
 
 }
@@ -112,8 +106,6 @@ class DetailFragment : Fragment() {
 
         return view
     }
-
-
 }
 
 
@@ -125,7 +117,6 @@ class QuestionsFragment : Fragment() {
 
         // Need to inflate
         val view = inflater.inflate(R.layout.fragment_question, container, false)
-        val questionSet  = arguments!!.getStringArray(current.toString())
 
         val questionView : TextView = view.findViewById(R.id.questionQuiz)
         val answerOneView : RadioButton = view.findViewById(R.id.answer1)
@@ -150,11 +141,6 @@ class QuestionsFragment : Fragment() {
             val currentQuestion = questions[current]
             val isCorrect = selectedOption.text.toString().equals(currentQuestion.quizQuestions[currentQuestion.correct])
 
-            // Stores the correct answer for summary fragment
-//            arguments?.putString("correctAnswer", currentQuestion.quizQuestions[currentQuestion.correct])
-
-//            // Amount of questions answered so far
-//            arguments?.putInt("answered", (arguments?.getInt("answered")!!.plus(1)))
             // Sets given to the answer selected by user
             arguments?.putString("given", selectedOption.text.toString())
             if (isCorrect) {
@@ -173,8 +159,6 @@ class QuestionsFragment : Fragment() {
 
 class SummaryFragment : Fragment () {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-
 
         val view = inflater.inflate(R.layout.fragment_summary, container, false)
 
@@ -197,13 +181,8 @@ class SummaryFragment : Fragment () {
         }
 
         answerIGave.text = "Your Answer: " + this.arguments?.getString("given")
-//        correctAnswer.text = "Correct Answer: " + this.arguments?.getString("correctAnswer")
         correctAnswer.text = "Correct Answer: " + currentQuestion.quizQuestions[currentQuestion.correct]
         correctSoFar.text = "You have " + arguments?.getInt("correct").toString() + " out of " + (arguments?.getInt("questionSize")) + " correct"
-
-//        if ((arguments?.getInt("current")!! + 1)!!.equals(arguments?.getInt("questionSize"))) {
-//            button.text = "Finish"
-//        }
 
         view.findViewById<Button>(R.id.button3)?.setOnClickListener {
             if (arguments?.getInt("current")!!.equals(arguments?.getInt("questionSize"))) {
