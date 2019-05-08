@@ -204,8 +204,8 @@ class DetailFragment : Fragment() {
         val cQuestions : TextView = view.findViewById(R.id.questions)
 
         // Change Text
-        cTopic.text = topic
-        cDescription.text = description
+        cTopic.text = "Topic: " + topic
+        cDescription.text = "Description: " + description
         cQuestions.text = questions.toString()
 
 
