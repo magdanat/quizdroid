@@ -42,8 +42,6 @@ class ListFragment : Fragment() {
 
 class RecyclerViewAdapter(var list: List<String>): RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
-//    var onTopicClickedListener: ((topic: TopicRepo.Topic) -> Unit)? = null
-
     override fun onCreateViewHolder(parent: ViewGroup, viewHolderType: Int): ViewHolder {
         // Creates ViewHolder to hold reference of the views
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item, parent, false)
@@ -65,10 +63,9 @@ class RecyclerViewAdapter(var list: List<String>): RecyclerView.Adapter<Recycler
 
             itemView.setOnClickListener {
                 // Needs to send topic as a bundle
-                val test = itemView.content.text.toString()
-                val test2 = QuizApp.repo.getTopic(test)
-                Log.e("Error", test)
-                val args = QuizApp.repo.makeBundle(test2!!)
+                val topicName = itemView.content.text.toString()
+                val topicData = QuizApp.repo.getTopic(topicName)
+                val args = QuizApp.repo.makeBundle(topicData!!)
 
                 it.findNavController().navigate(R.id.action_listFragment_to_detailFragment, args)
             }
