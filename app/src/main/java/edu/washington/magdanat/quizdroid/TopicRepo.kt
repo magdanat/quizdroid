@@ -39,7 +39,7 @@ class TopicRepo : TopicRepositoryInterface {
         // Questions for Marvel
         val marvelQOne = QuizQuestion("What color is Iron Man?", arrayOf("Red", "Blue", "Yellow", "Silver"), 0)
         val marvelQTwo = QuizQuestion("How many infinity stones are there?", arrayOf("1", "6", "3", "100"), 1)
-        val marvelQThree = QuizQuestion("What is Captain America's real name?", arrayOf("Bucky", "Stark", "Captain America", "Steve"), 2)
+        val marvelQThree = QuizQuestion("What is Captain America's real name?", arrayOf("Bucky", "Stark", "Captain America", "Steve"), 3)
 
 
         topicQuiz.add(Topic("Math", "Math quiz", "This quiz will be a series of math questions", arrayOf(mathQOne, mathQTwo, mathQThree, mathQFour)))

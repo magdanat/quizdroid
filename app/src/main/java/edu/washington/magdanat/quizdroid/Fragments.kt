@@ -92,9 +92,9 @@ class DetailFragment : Fragment() {
         val cQuestions : TextView = view.findViewById(R.id.questions)
 
         // Change Text
-        cTopic.text = topicName
-        cDescription.text = description
-        cQuestions.text = questionAmount.toString()
+        cTopic.text = "Topic: " + topicName
+        cDescription.text = "Description: " + description
+        cQuestions.text = questionAmount.toString() + " questions in this quiz"
 
         // For moving to next fragment
         view.findViewById<Button>(R.id.button).setOnClickListener {
