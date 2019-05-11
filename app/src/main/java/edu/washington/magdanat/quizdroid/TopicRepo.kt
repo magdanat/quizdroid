@@ -9,8 +9,6 @@ import org.json.JSONObject
 import java.io.IOException
 
 interface TopicRepositoryInterface {
-//    fun startRepo()
-//    fun listOfTopics(list) : List<String>
     fun getTopic(name: String): Topic?
     fun makeBundle(topic: Topic): Bundle
     fun getQuestions(topic: Topic): Array<QuizQuestion>

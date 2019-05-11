@@ -16,10 +16,6 @@ class QuizApp: Application() {
     }
 
     companion object {
-//        val repo = TopicRepo()
-//        init {
-//            repo.
-//        }
         lateinit var sharedInstance: QuizApp
             private set
     }
