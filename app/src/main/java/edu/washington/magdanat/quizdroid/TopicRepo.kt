@@ -11,14 +11,16 @@ import java.io.IOException
 interface TopicRepositoryInterface {
 //    fun startRepo()
 //    fun listOfTopics(list) : List<String>
-//    fun getTopic(name: String): Topic?
-//    fun makeBundle(topic: Topic): Bundle
-//    fun getQuestions(topic: Topic): Array<QuizQuestion>
+    fun getTopic(name: String): Topic?
+    fun makeBundle(topic: Topic): Bundle
+    fun getQuestions(topic: Topic): Array<QuizQuestion>
 }
 
 class TopicRepo : TopicRepositoryInterface{
     private lateinit var sharedPreferences: SharedPreferences
-    var list: List<String>
+    var list: List<Topic>
+    private var newBundle : Bundle? = null
+    private var test : Topic? = null
 
     companion object {
 
@@ -33,9 +35,6 @@ class TopicRepo : TopicRepositoryInterface{
         const val ANSWERS = "answers"
     }
 
-//    fun readWriteJson() {
-//        sharedPreferences = getSharedPreferences(USER_PREF_KEY, Context.MODE_Private)
-//    }
 
     constructor(context: Context) {
         val jsonArray = readJson(context)
@@ -67,7 +66,7 @@ class TopicRepo : TopicRepositoryInterface{
         return JSONArray(json)
     }
 
-    private fun createTopics(json: JSONArray): List<String> {
+    private fun createTopics(json: JSONArray): List<Topic> {
         var listOfTopics = arrayListOf<Topic>()
 
         for (i in 0 until json.length()) {
@@ -82,11 +81,7 @@ class TopicRepo : TopicRepositoryInterface{
             listOfTopics.add(quizTopic)
         }
 
-        val newList: ArrayList<String> = ArrayList()
-        for (obj in listOfTopics) {
-            newList.add(obj.name)
-        }
-        return newList
+        return listOfTopics
     }
 
     private fun createQuestions(json: JSONArray): Array<QuizQuestion> {
@@ -116,13 +111,33 @@ class TopicRepo : TopicRepositoryInterface{
         return answers.toTypedArray()
     }
 
-//    override fun listOfTopics(list: List<Topic>): List<String> {
-//        var newList: ArrayList<String> = ArrayList()
-//        for (obj in list) {
-//            newList.add(obj.name)
-//        }
-//        return newList
-//    }
+    override fun makeBundle(topic: Topic): Bundle {
+        newBundle = bundleOf("Topic" to topic.name,
+            "dOne" to topic.descriptionOne,
+            "dTwo" to topic.descriptionTwo,
+            "questionSize" to topic.questions.size,
+            // Current Question of array
+            "current" to 0,
+            // Answer Given
+            "given" to "",
+            // Correct answers so far
+            "correct" to 0
+        )
+        return newBundle as Bundle
+    }
+
+    override fun getTopic(name: String): Topic? {
+        for (obj in list) {
+            if (obj.name.equals(name)) {
+                test = obj
+            }
+        }
+        return test
+    }
+
+    override fun getQuestions(topic: Topic): Array<QuizQuestion> {
+        return topic.questions
+    }
 
 }
 

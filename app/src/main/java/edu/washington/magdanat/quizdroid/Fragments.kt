@@ -16,7 +16,7 @@ import android.widget.*
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.os.bundleOf
-import edu.washington.magdanat.quizdroid.QuizApp.Companion.repo
+//import edu.washington.magdanat.quizdroid.QuizApp.Companion.repo
 
 
 class ListFragment : Fragment() {
@@ -25,11 +25,14 @@ class ListFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_list, container, false)
-//        val list = QuizApp.repo.listOfTopics().toList()
         val list = QuizApp.sharedInstance.repo.list
-//        val newList = QuizApp.sharedInstance.repo.listOfTopics(list)
 
-        val adapter = RecyclerViewAdapter(list)
+        val newList: ArrayList<String> = ArrayList()
+        for (obj in list) {
+            newList.add(obj.name)
+        }
+
+        val adapter = RecyclerViewAdapter(newList)
         recycler = view.findViewById(R.id.myRecyclerView)
         recycler.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         recycler.adapter = adapter
@@ -66,12 +69,13 @@ class RecyclerViewAdapter(var list: List<String>): RecyclerView.Adapter<Recycler
             itemView.setOnClickListener {
                 // Needs to send topic as a bundle
                 val topicName = itemView.content.text.toString()
-//                val topicData = QuizApp.repo.getTopic(topicName)
-//                val args = QuizApp.repo.makeBundle(topicData!!)
+                val topicData = QuizApp.sharedInstance.repo.getTopic(topicName)
+                val args = QuizApp.sharedInstance.repo.makeBundle(topicData!!)
 
                 it.findNavController().navigate(R.id.action_listFragment_to_detailFragment, args)
             }
         }
+
     }
 
 }
@@ -112,7 +116,7 @@ class QuestionsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         var current = arguments?.getInt("current") // Current question
-        val questions = QuizApp.repo.getQuestions(QuizApp.repo.getTopic(arguments?.getString("Topic")!!)!!)
+        val questions = QuizApp.sharedInstance.repo.getQuestions(QuizApp.sharedInstance.repo.getTopic(arguments?.getString("Topic")!!)!!)
 
         // Need to inflate
         val view = inflater.inflate(R.layout.fragment_question, container, false)
@@ -165,7 +169,7 @@ class SummaryFragment : Fragment () {
         var current = arguments?.getInt("current")
 
         // Current array of questions
-        val questions = QuizApp.repo.getQuestions(QuizApp.repo.getTopic(arguments?.getString("Topic")!!)!!)
+        val questions = QuizApp.sharedInstance.repo.getQuestions(QuizApp.sharedInstance.repo.getTopic(arguments?.getString("Topic")!!)!!)
 
         // Current question of the set number
         val currentQuestion = questions[current!! - 1]
