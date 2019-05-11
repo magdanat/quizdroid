@@ -1,89 +1,129 @@
 package edu.washington.magdanat.quizdroid
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.core.os.bundleOf
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.IOException
 
 interface TopicRepositoryInterface {
-    fun startRepo()
-    fun listOfTopics() : Array<String>
-    fun getTopic(name: String): Topic?
-    fun makeBundle(topic: Topic): Bundle
-    fun getQuestions(topic: Topic): Array<QuizQuestion>
+//    fun startRepo()
+//    fun listOfTopics(list) : List<String>
+//    fun getTopic(name: String): Topic?
+//    fun makeBundle(topic: Topic): Bundle
+//    fun getQuestions(topic: Topic): Array<QuizQuestion>
 }
 
-class TopicRepo : TopicRepositoryInterface {
+class TopicRepo : TopicRepositoryInterface{
+    private lateinit var sharedPreferences: SharedPreferences
+    var list: List<String>
 
-    private var topicQuiz = arrayListOf<Topic>()
-    private lateinit var list : ArrayList<String>
-    private var test : Topic? = null
-    private var newBundle : Bundle? = null
+    companion object {
 
-    override fun startRepo() {
-        // Questions for math Topic
-        val mathQOne = QuizQuestion("1 + 1 = ?", arrayOf("2", "-2", "0", "1"), 0)
-        val mathQTwo = QuizQuestion("5 * 8 = ?", arrayOf("40", "-40", "20", "-20"), 0)
-        val mathQThree = QuizQuestion("100 % 10 = ?", arrayOf("100", "10", "1", "0"), 3)
-        val mathQFour = QuizQuestion("36 / 6 = ?", arrayOf("8", "2", "6", "4"), 2)
+        const val JSON_FILE_NAME = "questions.json"
 
-        // Questions for physics topic
-        val physicsQOne = QuizQuestion("What is the first law of physics?", arrayOf(
-            "An object will remain at rest or in uniform motion unless acted upon by an external force",
-            "There is no first law",
-            "E = mc^2",
-            "None of the Above"), 0)
-        val physicsQTwo = QuizQuestion("What is the acceleration of gravity?", arrayOf("10 m / s",
-            "9.9 m / s",
-            "9.81 m / s / s",
-            "2 m / s / s"), 2)
+        const val TITLE = "title"
+        const val DESCRIPTION = "desc"
+        const val QUESTIONS = "questions"
 
-        // Questions for Marvel
-        val marvelQOne = QuizQuestion("What color is Iron Man?", arrayOf("Red", "Blue", "Yellow", "Silver"), 0)
-        val marvelQTwo = QuizQuestion("How many infinity stones are there?", arrayOf("1", "6", "3", "100"), 1)
-        val marvelQThree = QuizQuestion("What is Captain America's real name?", arrayOf("Bucky", "Stark", "Captain America", "Steve"), 3)
-
-
-        topicQuiz.add(Topic("Math", "Math quiz", "This quiz will be a series of math questions", arrayOf(mathQOne, mathQTwo, mathQThree, mathQFour)))
-        topicQuiz.add(Topic("Physics", "Physics quiz", "This quiz will be a series of physics questions", arrayOf(physicsQOne, physicsQTwo)))
-        topicQuiz.add(Topic("Marvel Cinematic Universe!", "MCU Quiz", "This quiz be a series of questions about the Marvel" +
-                "Cinematic Universe", arrayOf(marvelQOne, marvelQTwo, marvelQThree)))
+        const val TEXT = "text"
+        const val ANSWER = "answer"
+        const val ANSWERS = "answers"
     }
 
-    override fun listOfTopics(): Array<String> {
-        list = ArrayList()
-        for (obj in topicQuiz) {
-            list.add(obj.name)
+//    fun readWriteJson() {
+//        sharedPreferences = getSharedPreferences(USER_PREF_KEY, Context.MODE_Private)
+//    }
+
+    constructor(context: Context) {
+        val jsonArray = readJson(context)
+        readWriteJson(context)
+        list = createTopics(jsonArray)
+    }
+
+    private fun readWriteJson(context: Context) {
+        sharedPreferences = context.getSharedPreferences("USER_PREFERENCES_KEY", Context.MODE_PRIVATE)
+    }
+
+    // Used to get json values
+    private fun readJson(context: Context): JSONArray {
+        val json: String? = try {
+
+
+            val inputStream = context.assets.open(JSON_FILE_NAME)
+            val size = inputStream.available()
+            val buffer = ByteArray(size)
+            inputStream.read(buffer)
+            inputStream.close()
+
+            String(buffer, Charsets.UTF_8)
+        } catch (e: IOException) {
+            null
         }
-        return list.toTypedArray()
+
+
+        return JSONArray(json)
     }
 
-    override fun getTopic(name: String): Topic? {
-        for (obj in topicQuiz) {
-            if (obj.name.equals(name)) {
-                test = obj
-            }
+    private fun createTopics(json: JSONArray): List<String> {
+        var listOfTopics = arrayListOf<Topic>()
+
+        for (i in 0 until json.length()) {
+            val quiz = json.get(i) as JSONObject
+            val quizTitle = quiz.get(TITLE) as String
+            val quizDesc = quiz.get(DESCRIPTION) as String
+            val quizJson = quiz.get(QUESTIONS) as JSONArray
+
+            val quizQuestions = createQuestions(quizJson)
+
+            val quizTopic = Topic(quizTitle, "A short quiz!", quizDesc, quizQuestions)
+            listOfTopics.add(quizTopic)
         }
-        return test
+
+        val newList: ArrayList<String> = ArrayList()
+        for (obj in listOfTopics) {
+            newList.add(obj.name)
+        }
+        return newList
     }
 
-    // Turns topic into a bundle to pass as an argument
-    override fun makeBundle(topic: Topic): Bundle {
-        newBundle = bundleOf("Topic" to topic.name,
-            "dOne" to topic.descriptionOne,
-            "dTwo" to topic.descriptionTwo,
-            "questionSize" to topic.questions.size,
-            // Current Question of array
-            "current" to 0,
-            // Answer Given
-            "given" to "",
-            // Correct answers so far
-            "correct" to 0
-        )
-        return newBundle as Bundle
+    private fun createQuestions(json: JSONArray): Array<QuizQuestion> {
+        var questions = arrayListOf<QuizQuestion>()
+
+        for (i in 0 until json.length()) {
+            val question = json.get(i) as JSONObject
+
+            val questionInfo = question.get(TEXT) as String
+            val correctAns = question.get(ANSWER) as String
+            val correctInt = (correctAns.toInt()) - 1
+
+            val jsonAnswers = question.get(ANSWERS) as JSONArray
+            val answers = createAnswers(jsonAnswers)
+
+            questions.add(QuizQuestion(questionInfo, answers, correctInt))
+        }
+        return questions.toTypedArray()
     }
 
-    override fun getQuestions(topic: Topic): Array<QuizQuestion> {
-        return topic.questions
+    private fun createAnswers(json: JSONArray): Array<String> {
+        var answers = arrayListOf<String>()
+
+        for (i in 0 until json.length()) {
+            answers.add(json.get(i) as String)
+        }
+        return answers.toTypedArray()
     }
+
+//    override fun listOfTopics(list: List<Topic>): List<String> {
+//        var newList: ArrayList<String> = ArrayList()
+//        for (obj in list) {
+//            newList.add(obj.name)
+//        }
+//        return newList
+//    }
+
 }
 
 data class QuizQuestion(val question: String, val quizQuestions: Array<String>, val correct: Int)

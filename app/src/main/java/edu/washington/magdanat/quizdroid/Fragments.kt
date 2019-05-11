@@ -25,7 +25,9 @@ class ListFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_list, container, false)
-        val list = QuizApp.repo.listOfTopics().toList()
+//        val list = QuizApp.repo.listOfTopics().toList()
+        val list = QuizApp.sharedInstance.repo.list
+//        val newList = QuizApp.sharedInstance.repo.listOfTopics(list)
 
         val adapter = RecyclerViewAdapter(list)
         recycler = view.findViewById(R.id.myRecyclerView)
@@ -64,8 +66,8 @@ class RecyclerViewAdapter(var list: List<String>): RecyclerView.Adapter<Recycler
             itemView.setOnClickListener {
                 // Needs to send topic as a bundle
                 val topicName = itemView.content.text.toString()
-                val topicData = QuizApp.repo.getTopic(topicName)
-                val args = QuizApp.repo.makeBundle(topicData!!)
+//                val topicData = QuizApp.repo.getTopic(topicName)
+//                val args = QuizApp.repo.makeBundle(topicData!!)
 
                 it.findNavController().navigate(R.id.action_listFragment_to_detailFragment, args)
             }
